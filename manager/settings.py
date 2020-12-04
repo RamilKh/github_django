@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 from config import config
+from os import path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +27,14 @@ SECRET_KEY = 'spthflhz5znb)dh&^e=gb30c&tcx7ik4__hkvwyqthbsru4%6b'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config.DEBUG
 
-ALLOWED_HOSTS = []
+if config.DEBUG is True:
+    ALLOWED_HOSTS = ['*']
+else:
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', '127.0.0.1:9092']
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
 
 
 # Application definition
@@ -38,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
     'app.apps.AppConfig',
 ]
 
@@ -49,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'manager.urls'
@@ -124,3 +134,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [path.join(BASE_DIR, 'static')]
+STATIC_ROOT = path.join(BASE_DIR, 'staticfiles')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = path.join(BASE_DIR, 'media').replace('\\', '/')
+
+if config.DEBUG is False:
+    STATIC_URL = 'http://127.0.0.1:9092/static/'
+    MEDIA_URL = 'http://127.0.0.1:9092/media/'

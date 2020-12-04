@@ -1,5 +1,17 @@
 version: "3.7"
 services:
+  otusweb:
+    image: otusweb
+    container_name: otusweb
+    restart: always
+    build:
+      context: ./
+      dockerfile: ./nginx/Dockerfile
+    volumes:
+      - ./staticfiles:/var/www/app/static
+      - ./media:/var/www/app/media
+    ports:
+     - "9092:80"
   otusdb:
     image: postgres:11
     container_name: otusdb
@@ -14,8 +26,9 @@ services:
     container_name: otusapp
     restart: always
     command: ["./wait-for-it.sh", "otusdb:5433", "--", "sh", "-c", "./entrypoint.sh"]
-    ports:
-      - 9091:80
+    volumes:
+      - ./staticfiles:/app/staticfiles
+      - ./media:/app/media
     environment:
       env: 'production'
     depends_on:

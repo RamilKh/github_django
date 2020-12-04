@@ -18,4 +18,5 @@ python manage.py initdata
 # application
 echo '';
 echo 'Start app:';
+python manage.py collectstatic --no-input
 python manage.py runserver 0.0.0.0:80

@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en">
-
 <head>
 	<base href="/">
 	<meta charset="utf-8">
@@ -9,14 +8,30 @@
 
 	<title>{% block title %}{% endblock %}</title>
 
+    {% load static %}
+	<link href="{% static 'reset.css' %}" rel="stylesheet">
+    <link href="{% static 'fonts.css' %}" rel="stylesheet">
+    <link href="{% static 'headline.css' %}" rel="stylesheet">
+    <link href="{% static 'table.css' %}" rel="stylesheet">
+    <link href="{% static 'form.css' %}" rel="stylesheet">
+    <link href="{% static 'icons.css' %}" rel="stylesheet">
+    <link href="{% static 'main.css' %}" rel="stylesheet">
+
 </head>
 
 <body>
-    <h1>{% block pagename %}{% endblock %}</h1>
+    {% include 'app/headline.html' %}
+    <div class="page page_title">
+        <div class="page__inner">
+            <h1 class="hdr">{% block pagename %}{% endblock %}</h1>
+        </div>
+    </div>
 
-    <main>
-        {% block body %}{% endblock %}
-    </main>
+    <div class="page page_default">
+        <div class="page__inner">
+            {% block body %}{% endblock %}
+        </div>
+    </div>
 </body>
 
 </html>

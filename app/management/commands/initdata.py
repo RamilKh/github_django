@@ -1,40 +1,45 @@
 from django.core.management.base import BaseCommand, CommandError
-from app.models import User
+from app.models import User, Profile
+from app.const.models import UserStatuses, UserDepartment
+from faker import Faker
 
 
 class Command(BaseCommand):
     help = 'Create test data: users'
 
     def handle(self, *args, **options):
-        print('Start!')
+        faker = Faker()
 
         # clear all users
         User.objects.all().delete()
+        Profile.objects.all().delete()
 
-        # Insert new users
-        User.objects.create(
-            first_name='James',
-            last_name='Karter',
-            email='james.karter@gmail.com',
-            status=1,
-        )
-        User.objects.create(
-            first_name='Mike',
-            last_name='Hitch',
-            email='mike.hith@gmail.com',
-            status=5,
-        )
-        User.objects.create(
-            first_name='Kate',
-            last_name='Monson',
-            email='kate@gmail.com',
-            status=9,
-        )
-        User.objects.create(
-            first_name='Alex',
-            last_name='Midlton',
-            email='alex.com',
-            status=5,
-        )
+        # Insert new data
+        profile = Profile.objects.create(department=UserDepartment.HR.value, secure_code=faker.ssn(),
+                                         status=UserStatuses.User)
+        User.objects.create(first_name=faker.first_name(), last_name=faker.last_name(), email=faker.ascii_safe_email(),
+                            profile=profile)
+
+        profile = Profile.objects.create(department=UserDepartment.IT.value, secure_code=faker.ssn(),
+                                         status=UserStatuses.Developer)
+        User.objects.create(first_name=faker.first_name(), last_name=faker.last_name(), email=faker.ascii_safe_email(),
+                            profile=profile)
+
+        profile = Profile.objects.create(department=UserDepartment.CEO.value, secure_code=faker.ssn(),
+                                         status=UserStatuses.Developer)
+        User.objects.create(first_name=faker.first_name(), last_name=faker.last_name(), email=faker.ascii_safe_email(),
+                            profile=profile)
+
+        profile = Profile.objects.create(department=UserDepartment.IT.value, secure_code=faker.ssn(),
+                                         status=UserStatuses.Admin)
+        User.objects.create(first_name=faker.first_name(), last_name=faker.last_name(), email=faker.ascii_safe_email(),
+                            profile=profile)
+
+        profile = Profile.objects.create(department=UserDepartment.CEO.value, secure_code=faker.ssn(),
+                                         status=UserStatuses.Admin)
+        User.objects.create(first_name=faker.first_name(), last_name=faker.last_name(), email=faker.ascii_safe_email(),
+                            profile=profile)
+
+        # result
         count = User.objects.all().count()
         print(f'Success! Inserted records: {count}')
