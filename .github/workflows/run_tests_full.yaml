@@ -42,10 +42,15 @@ jobs:
         run: |
           pip list
 
-      - name: 6. Init data to database
+      - name: 6. Make migrations
+        run: |
+          python manage.py makemigrations
+          python manage.py migrate
+
+      - name: 7. Init data to database
         run: |
           python manage.py initdata
 
-      - name: 7. Run test
+      - name: 8. Run test
         run: |
           python manage.py test app/tests/
